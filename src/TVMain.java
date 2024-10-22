@@ -77,15 +77,35 @@ public class TVMain {
         TVSeries series = new TVSeries(name);
 
         System.out.print("Its rating > ");
-        int rating = scanner.nextInt();
-        scanner.nextLine();
-        series.setRating(rating);
+        while (true) {
+            try {
+                int rating = scanner.nextInt();
+                scanner.nextLine();
+                series.setRating(rating);
+                break;
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.print("Enter a number > ");
+            } catch (IllegalArgumentException e) {
+                System.out.print("Enter a number between 0 and 10 > ");
+            }
+        }
 
         int i = 1;
         while (true) {
             System.out.print("Episodes in season " + i + " (0 exits) > ");
-            int episodes = scanner.nextInt();
-            scanner.nextLine();
+
+            int episodes;
+            while (true) {
+                try {
+                    episodes = scanner.nextInt();
+                    scanner.nextLine();
+                    break;
+                } catch (InputMismatchException e) {
+                    scanner.nextLine();
+                    System.out.print("Enter a number > ");
+                }
+            }
 
             if (episodes <= 0) {
                 break;
