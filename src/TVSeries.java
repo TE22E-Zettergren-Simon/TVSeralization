@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TVSeries {
+public class TVSeries implements Serializable {
     private String name;
     private int rating = 0;
     private ArrayList<Integer> episodes = new ArrayList<>();
