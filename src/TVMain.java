@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TVMain {
@@ -10,12 +11,65 @@ public class TVMain {
 
     public TVMain() {
         readShows();
+        System.out.println("Welcome! :)");
 
-        createShow();
-        createShow();
+        String[] mainMenu = {
+                "Add show",
+                "See shows",
+                "Exit",
+        };
+
+        loop: while (true) {
+            System.out.println();
+            int userChoice = chooseInMenu(mainMenu);
+
+            switch (userChoice) {
+                case 0:
+                    createShow();
+                    break;
+                case 1:
+                    for (TVSeries show : shows) {
+                        System.out.println();
+                        show.present();
+                    }
+                    break;
+                case 2:
+                    break loop;
+            }
+        }
 
         writeShows();
+
+        System.out.println("Goodbye! :)");
     }
+
+
+    private int chooseInMenu(String[] choices) {
+        for (int i = 0; i < choices.length; i++) {
+            System.out.println((i+1) + ". " + choices[i]);
+        }
+        System.out.print("Choose a number in the menu > ");
+
+        while (true) {
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                if (choice < 1) {
+                    System.out.print("Enter a number greater than 0 > ");
+                } else if (choice > choices.length) {
+                    System.out.print("Enter a number less than " + (choices.length+1) + " > ");
+                } else {
+                    return choice - 1;
+                }
+
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.print("Enter a number > ");
+            }
+        }
+    }
+
 
     private void createShow() {
         System.out.print("Name of series > ");
@@ -58,7 +112,6 @@ public class TVMain {
             fileOut.close();
         } catch (Exception e) {
             System.out.println("Failed to save shows");
-            throw new RuntimeException(e);
         }
     }
 
