@@ -16,6 +16,14 @@ public class TVSeries implements Serializable {
         }
 
         if (season == episodes.size() + 1) {
+            if (numOfEpisodes <= 0) {
+                throw new IllegalArgumentException("A season must have at least one episode");
+            }
+        } else if (episodes.get(season - 1) + numOfEpisodes <= 0) {
+            throw new IllegalArgumentException("A season must have at least one episode");
+        }
+
+        if (season == episodes.size() + 1) {
             episodes.add(numOfEpisodes);
         } else {
             int episodesInSeason = episodes.get(season - 1);
@@ -32,10 +40,18 @@ public class TVSeries implements Serializable {
     }
 
     public void present() {
-        System.out.println(name + "  Rating: " + rating + "/10");
+        System.out.println(name + "   Rating: " + rating + "/10");
         System.out.println("Seasons:");
         for (int i = 0; i < episodes.size(); i++) {
             System.out.println(i+1 + ": " + episodes.get(i) + " episodes");
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumOfSeasons() {
+        return episodes.size();
     }
 }

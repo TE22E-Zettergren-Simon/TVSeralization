@@ -15,6 +15,7 @@ public class TVMain {
 
         String[] mainMenu = {
                 "Add show",
+                "Edit a show",
                 "See shows",
                 "Exit",
         };
@@ -28,18 +29,21 @@ public class TVMain {
                     createShow();
                     break;
                 case 1:
+                    editShow();
+                    break;
+                case 2:
                     for (TVSeries show : shows) {
                         System.out.println();
                         show.present();
                     }
                     break;
-                case 2:
+                case 3:
                     break loop;
             }
         }
 
+        System.out.println();
         writeShows();
-
         System.out.println("Goodbye! :)");
     }
 
@@ -119,6 +123,38 @@ public class TVMain {
         shows.add(series);
     }
 
+    private void editShow() {
+        String[] showNames = new String[shows.size()];
+        for (int i = 0; i < shows.size(); i++) {
+            showNames[i] = "Edit " + shows.get(i).getName();
+        }
+        int userChoice = chooseInMenu(showNames);
+        TVSeries show = shows.get(userChoice);
+
+        int numOfSeasons = show.getNumOfSeasons();
+        String[] seasons = new String[numOfSeasons + 1];
+        for (int i = 0; i < numOfSeasons; i++) {
+            seasons[i] = "Edit season " + (i+1);
+        }
+        seasons[numOfSeasons] = "Add season " + (numOfSeasons+1);
+        int season = chooseInMenu(seasons) + 1;
+
+        System.out.print("How many episodes do you want to add > ");
+        while (true) {
+            try {
+                int newEpisodes = scanner.nextInt();
+                scanner.nextLine();
+                show.addEpisodes(newEpisodes, season);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.print("The season cannot have less than 1 episode, retry > ");
+            }catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.print("Enter a number > ");
+            }
+        }
+    }
+
     private void writeShows() {
         new File(SAVE_PATH);
         try {
@@ -141,7 +177,7 @@ public class TVMain {
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 
             shows = (ArrayList<TVSeries>) objectIn.readObject();
-            System.out.println("Read " + shows.size() + " shows.");
+            System.out.println("Read " + shows.size() + " shows");
 
             objectIn.close();
             fileIn.close();
